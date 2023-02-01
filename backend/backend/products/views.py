@@ -1,10 +1,14 @@
 from rest_framework import generics
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework import mixins
+from rest_framework import permissions
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from backend.products.models import Product
+from backend.products.permissions import IsStaffEditorPermission
 from backend.products.serializers import ProductSerializer
 
 
@@ -16,6 +20,8 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAdminUser, IsStaffEditorPermission]
 
     def perform_create(self, serializer):
         title = serializer.validated_data.get('title')
