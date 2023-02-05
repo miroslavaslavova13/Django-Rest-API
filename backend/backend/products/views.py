@@ -7,6 +7,7 @@ from rest_framework import permissions
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
+from backend.api.authentication import TokenAuthentication
 from backend.products.models import Product
 from backend.products.permissions import IsStaffEditorPermission
 from backend.products.serializers import ProductSerializer
@@ -20,7 +21,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAdminUser, IsStaffEditorPermission]
 
     def perform_create(self, serializer):
